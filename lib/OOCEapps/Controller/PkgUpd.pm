@@ -77,7 +77,7 @@ my $getPkgAvailVer = sub {
                     $url,
                     "$pkgList->{$pkg}->{version} -> $latest",
                     $pkgList->{$pkg}->{notes}
-                ] if versioncmp($pkgList->{$pkg}->{version}, $latest);
+                ] if versioncmp($pkgList->{$pkg}->{version}, $latest) < 0;
             }
         }
 

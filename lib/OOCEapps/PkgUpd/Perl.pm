@@ -1,8 +1,6 @@
 package OOCEapps::PkgUpd::Perl;
 use Mojo::Base 'OOCEapps::PkgUpd::base';
 
-my $PERLVER = '5.42';
-
 # public methods
 sub canParse {
     my $self = shift;
@@ -18,8 +16,10 @@ sub getVersions {
     my $res  = shift;
 
     $name = $self->extractName($name);
+    # Odd minor versions are development releases.
     return [
-        map { /$name-(\Q$PERLVER\E\.\d+)\.(?:tar\.(?:gz|xz|bz2|lz)|zip)/i }
+        grep { (split /\./)[1] % 2 == 0 }
+        map { /$name-(5\.\d+\.\d+)\.(?:tar\.(?:gz|xz|bz2|lz)|zip)/i }
             $res->dom->find('a')->each
     ];
 }
