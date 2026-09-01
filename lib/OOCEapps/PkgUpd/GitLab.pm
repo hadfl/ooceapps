@@ -15,11 +15,16 @@ sub getVersions {
     my $name = shift;
     my $res  = shift;
 
-    $name = $self->extractName($name);
-
-    my $attr = $name eq 'libxslt' ? 'tag_name' : 'name';
-
-    return [ map { $_->{$attr} =~ /^v?([\d.]+)$/ } @{$res->json // []} ];
+    # The releases API carries the version in 'tag_name'
+    # Entries from the repository/tags API have no 'tag_name' though so
+    # there we need to use 'name'.
+    return [
+        map {
+            my ($v) = ($_->{tag_name} // '') =~ /^v?([\d.]+)$/;
+            ($v) = ($_->{name} // '') =~ /^v?([\d.]+)$/ if !defined $v;
+            $v // ();
+        } @{$res->json // []}
+    ];
 }
 
 1;

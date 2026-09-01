@@ -5,6 +5,7 @@ my %TRANSFORM = (
     'openvpn-auth-ldap' => 'auth-ldap',
     'azure-agent'       => 'WALinuxAgent',
     'libgd'             => 'gd',
+    'libmagic'          => 'FILE',
     'fuse'              => 'Version',
     'intel'             => 'microcode',
     'minio'             => 'RELEASE',
@@ -16,6 +17,13 @@ my %TRANSFORM = (
     'compiler-rt'       => 'llvmorg',
     'llvm'              => 'llvmorg',
     'libcxx'            => 'llvmorg',
+);
+
+# Projects that use a bare trailing letter as a point-release suffix
+# (e.g. tmux 3.7c). For anything else a trailing 'a' or 'b' is treated
+# as an alpha/beta marker and other letters are not part of the version.
+my %LETTERVER = map { $_ => undef } qw(
+    tmux
 );
 
 # public methods
@@ -52,10 +60,12 @@ sub getVersions {
 
     my $prog = $url->path->[1];
 
+    my $lsuf = exists $LETTERVER{$name} ? qr/[a-z]?/i : qr//;
+
     return [
         grep { /^$ver/ }
         map { m#/\Q$prog\E/releases/tag/(?:v(?:er\.)?|rel(?:ease)?[-.]|stable-|R\.|$name-?\.?)?
-            (\d{4}(?:-\d{2}){2}T(?:\d{2}-){2}\d{2}Z|[\d.]+(?:op)?\d+)
+            (\d{4}(?:-\d{2}){2}T(?:\d{2}-){2}\d{2}Z|[\d.]+(?:op)?\d+$lsuf)
             (?!-?(?:\.\d+|\.?(?:rc\d*|dev|a(?:lpha)?|b(?:eta)?|pre|test)))#ix
         } @versions
     ];

@@ -2,10 +2,11 @@ package OOCEapps::PkgUpd::VersionLock;
 use Mojo::Base 'OOCEapps::PkgUpd::base';
 
 my %VERLOCKMAP = (
-    'ooce/database/bdb'     => '5.3.28',
-    'ooce/multimedia/x264'  => '20210613',
-    'ooce/system/top'       => '3.8',
-    'system/network/lldp'   => '0.4alpha',
+    'ooce/database/bdb'      => '5.3.28',
+    'ooce/multimedia/x264'   => '20210613',
+    'ooce/system/top'        => '3.8',
+    'system/network/lldp'    => '0.4alpha',
+    'system/test/epolltest'  => '20240808',
 );
 
 # public methods
